@@ -9,11 +9,21 @@ const TweetsBySpecificUser = ({ profileInfo }) => {
     const { setIsSingleTweetView } = useContext(TweetContext)
 
     useEffect(() => {
+        let isCancelled = false;
+
         fetch(`/api/${profileInfo.handle}/feed`)
             .then((res) => res.json())
-            .then((json) => setTweetsByUser(json))
-            .then(() => setIsSingleTweetView(false));
-    }, [profileInfo, tweetsByUser])
+            .then((json) => {
+                if (!isCancelled) {
+                    setTweetsByUser(json);
+                    setIsSingleTweetView(false);
+                } 
+            });
+        
+        return () => {
+            isCancelled = true;
+        }
+    }, [profileInfo])
     
     return (
         <>

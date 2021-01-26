@@ -159,9 +159,19 @@ const Profile = () => {
     const tabActiveStyle = {color: `${COLORS.primary}`, borderBottom: `3px solid ${COLORS.primary}`};
     
     useEffect(() => {
+        let isCancelled = false;
+
         fetch(`/api/${profileId}/profile`)
             .then((res) => res.json())
-            .then((json) => setProfileInfo(json.profile));
+            .then((json) => {
+                if (!isCancelled) {
+                    setProfileInfo(json.profile);
+                }
+            });
+        
+        return () => {
+            isCancelled = true;
+        }
     },[profileId, profileInfo]) 
     
     useEffect(() => {

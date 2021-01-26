@@ -26,9 +26,15 @@ const TweetDetails = () => {
     const { tweetId } = useParams();
 
     useEffect(() => {
-            fetch(`/api/tweet/${tweetId}`)
+        let isCancelled = false;
+
+        fetch(`/api/tweet/${tweetId}`)
             .then((res) => res.json())
-            .then((json) => setSingleTweetInfo(json))
+            .then((json) => {
+                if (!isCancelled) {
+                    setSingleTweetInfo(json);
+                }
+            })
             .then(() => {
                 setIsSingleTweetView(true);
                 setIsLoading(false);
@@ -37,6 +43,10 @@ const TweetDetails = () => {
                 console.log(err);
                 setError('singleTweet');
             });
+        
+        return () => {
+            isCancelled = true;
+        }
     }, [singleTweetInfo])
 
     const retweetHandle = (singleTweetInfo && singleTweetInfo.tweet.retweetFrom) && singleTweetInfo.tweet.retweetFrom.handle;
