@@ -172,7 +172,7 @@ const Profile = () => {
         return () => {
             isCancelled = true;
         }
-    },[profileId, profileInfo]) 
+    },[profileId]) 
     
     useEffect(() => {
         if (profileInfo) {
